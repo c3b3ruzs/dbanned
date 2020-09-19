@@ -6,7 +6,7 @@ if ! [ $(id -u) = 0 ]; then
 	exit 1
 else
 	# update, dhcp und tft server ifupdown installation 
-	apt-get update 
+	apt-get update && apt-get upgrade -y
 	apt-get install ifupdown -y
 	apt-get install dnsmasq -y
 	apt-get install tftpd-hpa -y 
@@ -84,5 +84,7 @@ APPEND nuke="dwipe --autonuke --method dod522022m" silent
 	sudo /etc/init.d/networking restart
 	sudo /etc/init.d/dnsmasq restart
 	echo "sollte laufen, check die dienste"
-	
+	systemctl status networking.service
+	systemctl status dnsmasq.service
+	systemctl status tftpd-hpa.service
 fi
