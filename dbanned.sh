@@ -6,7 +6,11 @@ if ! [ $(id -u) = 0 ]; then
 	exit 1
 else
 	# update, dhcp und tft server ifupdown installation 
-	apt-get update && apt-get install ifupdown dnsmasq tftpd-hpa-y openssh-server
+	apt-get update 
+	apt-get install ifupdown -y
+	apt-get install dnsmasq -y
+	apt-get install tftpd-hpa -y 
+	apt-get install openssh-server -y
 	
 	# configure dhcp server
 	echo " 
