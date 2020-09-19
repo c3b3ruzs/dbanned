@@ -5,11 +5,8 @@ if ! [ $(id -u) = 0 ]; then
 	echo "Script muss als root ausgeführt werden!"
 	exit 1
 else
-	# update und ifupdown installation 
-	apt-get update && apt-get install ifupdown -y
-	
-	# dhcp und tft server installation
-	apt-get -y install dnsmasq tftpd-hpa
+	# update, dhcp und tft server ifupdown installation 
+	apt-get update && apt-get install ifupdown dnsmasq tftpd-hpa-y openssh-server
 	
 	# configure dhcp server
 	echo " 
@@ -24,17 +21,17 @@ else
 	
 	# interfaces konfiguration
 	echo "	
-		# The loopback network interface
-		auto lo
-		iface lo inet loopback
+# The loopback network interface
+auto lo
+iface lo inet loopback
 			
-		# enp0s3 <---- zum schluss wegen dns fehler
-		allow-hotplug enp0s3
-		auto enp0s3
-		iface enp0s3 inet static
-		address 10.0.0.1
-		netmask 255.255.255.0
-		" > /etc/network/interfaces 
+# enp0s3 <---- zum schluss wegen dns fehler
+allow-hotplug enp0s3
+auto enp0s3
+iface enp0s3 inet static
+address 10.0.0.1
+netmask 255.255.255.0
+" > /etc/network/interfaces 
 		
 	# Download DBAN iso file
 	mkdir /dbanned
@@ -47,12 +44,11 @@ else
 	wget http://mirrors.tummy.com/pub/ftp.ubuntulinux.org/ubuntu/dists/precise/main/installer-i386/current/images/netboot/ubuntu-installer/i386/pxelinux.0
 	mkdir /var/lib/tftpboot/pxelinux.cfg
 	echo " 
-	DEFAULT autonuke
+DEFAULT autonuke
 
-	LABEL autonuke
-	KERNEL dban.bzi
-	APPEND nuke="dwipe --autonuke --method dod522022m" silent
-	
+LABEL autonuke
+KERNEL dban.bzi
+APPEND nuke="dwipe --autonuke --method dod522022m" silent
 	" > /var/lib/tftpboot/pxelinux.cfg/default
 
 	# Lastly, make sure our clients can read the files.
