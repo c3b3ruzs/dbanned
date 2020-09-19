@@ -77,11 +77,8 @@ APPEND nuke="dwipe --autonuke --method dod522022m" silent
 	apt-get --assume-yes purge nplan netplan.io
 	
 	# Restart the affected services
-	/etc/init.d/networking restart
-	/etc/init.d/dnsmasq restart
-	
+	sudo /etc/init.d/networking restart
+	sudo /etc/init.d/dnsmasq restart
 	echo "sollte laufen, check die dienste"
-	systemctl status networking
-	systemctl status tftpd-hpa 
-	systemctl status dnsmasq
+	
 fi
