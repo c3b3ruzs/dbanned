@@ -10,11 +10,11 @@ else
 	
 	# configure dhcp server
 	echo " 
-		# Add these to the top of the file
-		dhcp-range=10.0.0.2,10.0.0.254,6h
-		dhcp-boot=pxelinux.0,dban-server,10.0.0.1
-		interface=enp0s3
-		" > /etc/dnsmasq.conf
+# Add these to the top of the file
+dhcp-range=10.0.0.2,10.0.0.254,6h
+dhcp-boot=pxelinux.0,dban-server,10.0.0.1
+interface=enp0s3
+" > /etc/dnsmasq.conf
 		
 	# enable tftpd at boot
 	sed -i '3s/.*/start on (local-filesystems and net-device-up IFACE=enp0s3)/' /etc/init/tftpd-hpa.conf
