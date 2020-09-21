@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 if ! [ $(id -u) = 0 ]; then
 	echo "Script muss als root ausgeführt werden!"
 	exit 1
@@ -27,8 +26,7 @@ dhcp-range=10.0.0.2,10.0.0.254,6h
 dhcp-boot=pxelinux.0,dban-server,10.0.0.1
 interface="$iface"
 " > /etc/dnsmasq.conf
-		
-	sed -i "17s/.*/$newnameserver/" $res	
+			
 	# enable tftpd at boot
 	sed -i '3s/.*/start on (local-filesystems and net-device-up IFACE=enp0s3)/' /etc/init/tftpd-hpa.conf
 	
@@ -63,12 +61,13 @@ LABEL autonuke
 KERNEL dban.bzi
 APPEND nuke="dwipe --autonuke --method dod522022m" silent
 	" > /var/lib/tftpboot/pxelinux.cfg/default
-
+	
 	# Lastly, make sure our clients can read the files.
 	sudo chmod -R 755 /var/lib/tftpboot/
-
-
-			
+	
+	# change dns 
+	sed -i "17s/.*/$newnameserver/" $res
+	
 	# interface aktivieren und service persistent machen	
 	ifdown --force $iface lo && ifup -a
 	systemctl unmask networking
@@ -78,14 +77,10 @@ APPEND nuke="dwipe --autonuke --method dod522022m" silent
 	# tftpd starten
 	systemctl restart tftpd-hpa
 	
-	
 	# Stop, Mask und purge unwanted deamons 
 	systemctl stop systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-	
 	systemctl disable systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-	
 	systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
-	
 	apt-get --assume-yes purge nplan netplan.io
 	
 	# Restart the affected services
