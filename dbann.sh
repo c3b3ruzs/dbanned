@@ -28,7 +28,7 @@ dhcp-boot=pxelinux.0,dban-server,10.0.0.1
 interface="$iface"
 " > /etc/dnsmasq.conf
 		
-	sed -i 17s/.*/$newnameserver/ $res	
+	sed -i "17s/.*/$newnameserver/" $res	
 	# enable tftpd at boot
 	sed -i '3s/.*/start on (local-filesystems and net-device-up IFACE=enp0s3)/' /etc/init/tftpd-hpa.conf
 	
