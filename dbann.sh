@@ -12,19 +12,23 @@ else
 	apt-get install tftpd-hpa -y 
 	apt-get install openssh-server -y
 	
-	echo "welches interface? (enp0s3, eht0, etc...): "
-	read iface
-	echo "welcher dns? (xxx.xxx.xxx.xxx): "
-	read dns
+	inf="/etc/network/interfaces"
+	res="/etc/resolv.conf"
+	
+	read -p "welches interface? (enp0s3, eht0, etc...): " iface
+	read -p "welcher dns? (xxx.xxx.xxx.xxx): " dns
+	nms="nameserver "
+	newnameserver=$nms$dns
+	
 	# configure dhcp server
 	echo " 
 # Add these to the top of the file
 dhcp-range=10.0.0.2,10.0.0.254,6h
 dhcp-boot=pxelinux.0,dban-server,10.0.0.1
-interface=$iface
+interface="$iface"
 " > /etc/dnsmasq.conf
 		
-	sed -i '17s/.*/nameserver $dns/' /etc/resolv.conf	
+	sed -i 17s/.*/$newnameserver/ $res	
 	# enable tftpd at boot
 	sed -i '3s/.*/start on (local-filesystems and net-device-up IFACE=enp0s3)/' /etc/init/tftpd-hpa.conf
 	
@@ -34,13 +38,13 @@ interface=$iface
 auto lo
 iface lo inet loopback
 			
-# $iface <---- zum schluss wegen dns fehler
-allow-hotplug $iface
-auto $iface
-iface $iface inet static
+#"$iface" 
+allow-hotplug "$iface"
+auto "$iface"
+iface "$iface" inet static
 address 10.0.0.1
 netmask 255.255.255.0
-" > /etc/network/interfaces 
+" > $inf
 		
 	# Download DBAN iso file
 	mkdir /dbanned
