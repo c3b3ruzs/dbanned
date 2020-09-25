@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if ! [ $(id -u) = 0 ]; then
-	echo "Script muss als root ausgeführt werden!"
+	echo "Run Script as root!"
 	exit 1
 else
 	# update, dhcp und tft server ifupdown installation 
@@ -14,8 +14,8 @@ else
 	inf="/etc/network/interfaces"
 	res="/etc/resolv.conf"
 	
-	read -p "welches interface? (enp0s3, eht0, etc...): " iface
-	read -p "welcher dns? (xxx.xxx.xxx.xxx): " dns
+	read -p "which interface? (enp0s3, eht0, etc...): " iface
+	read -p "which dns? (xxx.xxx.xxx.xxx): " dns
 	nms="nameserver "
 	newnameserver=$nms$dns
 	
