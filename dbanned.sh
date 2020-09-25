@@ -30,7 +30,7 @@ interface="$iface"
 	# enable tftpd at boot
 	sed -i '3s/.*/start on (local-filesystems and net-device-up IFACE=enp0s3)/' /etc/init/tftpd-hpa.conf
 	
-	# interfaces konfiguration
+	# interfaces configuration
 	echo "	
 # The loopback network interface
 auto lo
@@ -68,13 +68,13 @@ APPEND nuke="dwipe --autonuke --method dod522022m" silent
 	# change dns 
 	sed -i "17s/.*/$newnameserver/" $res
 	
-	# interface aktivieren und service persistent machen	
+	# activate interface and enable service start at boot	
 	ifdown --force $iface lo && ifup -a
 	systemctl unmask networking
  	systemctl enable networking
  	systemctl restart networking
 	
-	# tftpd starten
+	# start tftpd
 	systemctl restart tftpd-hpa
 	
 	# Stop, Mask und purge unwanted deamons 
@@ -86,7 +86,7 @@ APPEND nuke="dwipe --autonuke --method dod522022m" silent
 	# Restart the affected services
 	sudo /etc/init.d/networking restart
 	sudo /etc/init.d/dnsmasq restart
-	echo "sollte laufen, check die dienste"
+	echo "services should run, if something fails it might be the dns, so check resolv.conf again"
 	systemctl status networking.service
 	systemctl status dnsmasq.service
 	systemctl status tftpd-hpa.service
